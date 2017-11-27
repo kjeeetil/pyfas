@@ -77,7 +77,20 @@ class Tpl:
                                                             '').replace("\n",
                                                                         "")
                     break
-
+                        
+    def to_series(self, filterstr):
+        """
+        Returns time indexed Pandas Series if provided a filter that returns exactly one timeseries.
+        """
+        idxs=self.filter_data(filterstr)
+        if len(idxs)>1:
+            raise TypeError("More than one filtered result")
+        elif len(idxs)<1:
+            raise TypeError("No series matching filter")
+        idx=idxs.keys()[0]
+        self.extract(idx)
+        return pd.Series(self.data[idx], index=self.time)
+    
     def to_excel(self, *args):
         """
         Dump all the data to excel, fname and path can be passed as args
