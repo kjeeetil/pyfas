@@ -64,6 +64,7 @@ class Tpl:
         self.time = np.loadtxt(self.abspath,
                                skiprows=self._attributes['data_idx']+1,
                                unpack=True, usecols=(0,))
+<<<<<<< HEAD
         for variable_idx in args:
             data = np.loadtxt(self.abspath,
                               skiprows=self._attributes['data_idx']+1,
@@ -105,6 +106,37 @@ class Tpl:
         df.index.name = "Filter: {}".format(pattern)
         return df
 
+=======
+        data = np.loadtxt(self.abspath,
+                          skiprows=self._attributes['data_idx']+1,
+                          unpack=True,
+                          usecols=(variable_idx,))
+        with open(self.abspath) as fobj:
+            for idx, line in enumerate(fobj):
+                if idx == 1 + variable_idx+self._attributes['CATALOG']:
+                    try:
+                        self.data[variable_idx] = data[:len(self.time)]
+                    except TypeError:
+                        self.data[variable_idx] = data.base
+                    self.label[variable_idx] = line.replace("\'",
+                                                            '').replace("\n",
+                                                                        "")
+                    break
+                        
+    def to_series(self, filterstr):
+        """
+        Returns time indexed Pandas Series if provided a filter that returns exactly one timeseries.
+        """
+        idxs=self.filter_data(filterstr)
+        if len(idxs)>1:
+            raise TypeError("More than one filtered result")
+        elif len(idxs)<1:
+            raise TypeError("No series matching filter")
+        idx=idxs.keys()[0]
+        self.extract(idx)
+        return pd.Series(self.data[idx], index=self.time)
+    
+>>>>>>> 4b87b8d3ad35bf5b011e64f757dbd0662f34d4d8
     def to_excel(self, *args):
         """
         Dump all the data to excel, fname and path can be passed as args
