@@ -37,7 +37,7 @@ class Vfp:
                         row = row + " " + next(reader)
                         row = row.replace("\n","")
                         row = ' '.join(row.split())
-                    rows.append(map(lambda x: float(x), row.replace(" /", "").replace("/", "").split(" ")))
+                    rows.append(map(lambda x: float(x), row.replace(" /", "").replace("/", "").split()))
             self._attributes["rows"]=rows
             
             
